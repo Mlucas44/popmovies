@@ -1,0 +1,8 @@
+uuid: 0686be5d-add2-408e-be66-08ebc470fb24
+langcode: en
+status: true
+dependencies: {  }
+id: footer-right
+label: 'Footer right'
+description: ''
+locked: false

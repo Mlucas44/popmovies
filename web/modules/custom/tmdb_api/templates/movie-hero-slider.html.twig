@@ -1,0 +1,75 @@
+{# web/modules/custom/tmdb_api/templates/movie-hero-slider.html.twig #}
+{{ attach_library('tmdb_theme/hero_slider') }}
+
+{% set hero_movies = movies|slice(0, 5) %}
+
+{# J'ajoute un dégradé en haut 'bg-gradient-to-b' pour que le menu transparent reste lisible même sur une affiche blanche #}
+<div id="hero-slider" data-slide-count="{{ hero_movies|length }}" class="relative w-full h-[80vh] md:h-[95vh] overflow-hidden bg-pop-nuit group border-b border-pop-toile">
+  
+  {# Conteneur des slides (se décale horizontalement) #}
+  <div id="hero-slider-track" class="flex w-full h-full transition-transform duration-700 ease-in-out">
+    {% for movie in hero_movies %}
+      <div class="w-full h-full flex-shrink-0 relative">
+        
+        {# Image d'arrière-plan (Backdrop) #}
+        {% set backdrop_url = movie.backdrop_path ? 'https://image.tmdb.org/t/p/original' ~ movie.backdrop_path : 'https://image.tmdb.org/t/p/original' ~ movie.poster_path %}
+        <img src="{{ backdrop_url }}" alt="{{ movie.title }}" class="w-full h-full object-cover object-center" />
+        
+        {# Dégradés pour l'effet "Netflix" #}
+        {# 1. Fondu du bas vers le haut pour se fondre dans bg-pop-nuit #}
+        <div class="absolute inset-0 bg-gradient-to-t from-pop-nuit via-pop-nuit/40 to-transparent"></div>
+        {# 1bis. Fondu transparent vers sombre EN HAUT pour la barre de menu #}
+        <div class="absolute inset-0 bg-gradient-to-b from-pop-nuit/80 via-transparent to-transparent h-48"></div>
+        {# 2. Fondu de gauche à droite pour lire le texte plus facilement #}
+        <div class="absolute inset-0 bg-gradient-to-r from-pop-nuit via-pop-nuit/50 to-transparent md:w-3/4"></div>
+
+        {# Contenu du film (Texte et Boutons) #}
+        {# J'ai augmenté le padding-top `pt-32` pour que le texte ne se bloque pas sous le header transparent #}
+        <div class="absolute inset-0 flex flex-col justify-end pt-32 pb-20 md:pb-32 px-4 md:px-16 container mx-auto">
+          
+          <h2 class="text-4xl md:text-6xl lg:text-7xl font-bold text-pop-blanc tracking-tight mb-4 drop-shadow-lg max-w-4xl line-clamp-2">
+            {{ movie.title }}
+          </h2>
+          
+          <div class="flex items-center gap-4 mb-6 text-sm md:text-base font-semibold text-gray-300">
+            <span class="flex items-center gap-1 text-pop-or">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              {{ movie.vote_average|number_format(1) }}
+            </span>
+            {% if movie.release_date %}
+              <span>{{ movie.release_date|date('Y') }}</span>
+            {% endif %}
+          </div>
+          
+          <p class="text-gray-200 text-sm md:text-lg max-w-2xl drop-shadow-md mb-8 hidden md:block line-clamp-3">
+            {{ movie.overview }}
+          </p>
+          
+          <div class="flex items-center gap-4">
+            <a href="#" class="px-6 py-3 bg-pop-blanc text-pop-nuit font-bold rounded flex items-center gap-2 hover:bg-gray-300 hover:scale-105 transition-all duration-300">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              Plus d'infos
+            </a>
+          </div>
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+
+  {# Boutons Précédent / Suivant (visibles au hover) #}
+  <button id="slider-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-pop-or hover:text-pop-nuit transition-all duration-300 z-10 hidden md:flex" aria-label="Slide précédente">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+  </button>
+  <button id="slider-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-pop-or hover:text-pop-nuit transition-all duration-300 z-10 hidden md:flex" aria-label="Slide suivante">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+  </button>
+
+  {# Indicateurs (Dots) #}
+  <div class="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+    {% for movie in hero_movies %}
+      <button class="slider-dot h-2 w-2 rounded-full bg-pop-blanc/50 hover:bg-pop-blanc transition-all duration-300 cursor-pointer" data-index="{{ loop.index0 }}" aria-label="{{ 'Aller à la slide @index'|t({'@index': loop.index}) }}"></button>
+    {% endfor %}
+  </div>
+
+</div>

@@ -1,0 +1,105 @@
+tmdb_api.popular_movies:
+  path: '/films/popular'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::popular'
+    _title: "Films Populaires à l'affiche"
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.genre_page:
+  path: '/genres/{genre_id}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::genrePage'
+    _title: 'Films par genre'
+  requirements:
+    _permission: 'access content'
+    genre_id: '\d+'
+
+tmdb_api.api_load_more:
+  path: '/api/genres/{genre_id}/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::loadMoreGenres'
+  requirements:
+    _permission: 'access content'
+    genre_id: '\d+'
+    page: '\d+'
+
+tmdb_api.api_popular_movies:
+  path: '/api/movies/popular/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::loadMorePopular'
+  requirements:
+    _permission: 'access content'
+    page: '\d+'
+
+tmdb_api.now_playing_movies:
+  path: '/films/now-playing'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::nowPlaying'
+    _title: "Films à l'affiche"
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.api_now_playing_movies:
+  path: '/api/movies/now-playing/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::loadMoreNowPlaying'
+  requirements:
+    _permission: 'access content'
+    page: '\d+'
+
+tmdb_api.upcoming_movies:
+  path: '/films/upcoming'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::upcoming'
+    _title: 'Films à venir'
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.api_upcoming_movies:
+  path: '/api/movies/upcoming/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::loadMoreUpcoming'
+  requirements:
+    _permission: 'access content'
+    page: '\d+'
+
+tmdb_api.top_rated_movies:
+  path: '/films/top-rated'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::topRated'
+    _title: 'Mieux notés'
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.api_top_rated_movies:
+  path: '/api/movies/top-rated/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::loadMoreTopRated'
+  requirements:
+    _permission: 'access content'
+    page: '\d+'
+
+tmdb_api.movie_detail:
+  path: '/film/{id}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::detail'
+    _title: 'Détail du film'
+  requirements:
+    _permission: 'access content'
+    id: '\d+'
+
+tmdb_api.search:
+  path: '/api/movies/search'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::searchApi'
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.home:
+  path: '/home'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieController::homePage'
+    _title: 'Accueil'
+  requirements:
+    _access: 'TRUE'

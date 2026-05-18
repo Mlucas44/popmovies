@@ -1,0 +1,24 @@
+{# --- BARRE DE RECHERCHE --- #}
+<div class="mb-16 text-center max-w-3xl mx-auto">    
+  <div class="flex items-center w-full bg-white/5 border-2 border-pop-toile rounded-full py-4 px-6 transition-colors backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] focus-within:border-pop-or relative z-10">
+    
+    <div class="flex-shrink-0 text-pop-blanc/50 mr-4">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </div>
+
+    <input 
+      type="text" 
+      id="movie-search-input" 
+      class="flex-grow bg-transparent border-none text-pop-blanc placeholder:text-pop-blanc/40 focus:outline-none focus:ring-0 text-lg w-full p-0" 
+      placeholder="Entrez le titre d'un film (ex: Inception, Matrix...)"
+      autocomplete="off"
+    >
+    
+    <div id="search-loader" class="hidden flex-shrink-0 ml-4">
+      <div class="w-6 h-6 border-2 border-pop-or border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  </div>
+</div>

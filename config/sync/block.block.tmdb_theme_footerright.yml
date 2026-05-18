@@ -1,0 +1,25 @@
+uuid: 07bb6672-9c0e-4195-9bbd-9e8f87011c74
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-right
+  module:
+    - system
+  theme:
+    - tmdb_theme
+id: tmdb_theme_footerright
+theme: tmdb_theme
+region: footer_right
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer-right'
+settings:
+  id: 'system_menu_block:footer-right'
+  label: 'Footer right'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

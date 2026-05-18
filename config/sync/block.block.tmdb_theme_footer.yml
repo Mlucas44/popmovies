@@ -1,0 +1,25 @@
+uuid: 6d29bed5-c3d1-48cc-b7af-8cfaf407d7de
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer
+  module:
+    - system
+  theme:
+    - tmdb_theme
+id: tmdb_theme_footer
+theme: tmdb_theme
+region: header
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer'
+settings:
+  id: 'system_menu_block:footer'
+  label: Footer
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

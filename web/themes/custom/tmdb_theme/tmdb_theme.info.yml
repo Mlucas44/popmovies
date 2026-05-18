@@ -1,0 +1,15 @@
+name: 'TMDB Theme'
+type: theme
+description: 'Thème custom avec Tailwind CSS.'
+core_version_requirement: ^11
+base theme: stable9
+
+libraries:
+  - tmdb_theme/global-styling
+  - tmdb_theme/carousel
+
+regions:
+  header: 'Header'
+  content: 'Content'
+  footer_left: 'Footer Gauche (Logo & Texte)'
+  footer_right: 'Footer Droit (Liens)'

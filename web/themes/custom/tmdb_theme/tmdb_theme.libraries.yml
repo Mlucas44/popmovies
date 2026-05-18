@@ -1,0 +1,35 @@
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+
+infinite_scroll:
+  version: 1.0
+  js:
+    js/infinite-scroll.js: {}
+  dependencies:
+    - core/drupal
+
+live_search:
+  version: 1.0
+  js:
+    js/live-search.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+hero_slider:
+  version: 1.0
+  js:
+    js/hero-slider.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+carousel:
+  version: 1.0
+  js:
+    js/carousel.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

@@ -1,0 +1,21 @@
+# Ignorer les dépendances Composer
+/vendor/
+**/node_modules/
+
+# Ignorer le cœur de Drupal et les modules/themes contribués (gérés par Composer)
+# Si tu as personnalisé le dossier web, ajuste le chemin
+/web/core/
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/libraries/
+
+# Ignorer tout le dossier sites car généré par Composer et non versionné
+/web/sites/
+
+# Environnement local
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/

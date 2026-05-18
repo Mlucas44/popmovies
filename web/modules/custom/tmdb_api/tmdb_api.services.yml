@@ -1,0 +1,4 @@
+services:
+  tmdb_api.client:
+    class: Drupal\tmdb_api\Service\TmdbClient
+    arguments: ['@http_client', '@logger.factory', '@cache.default']

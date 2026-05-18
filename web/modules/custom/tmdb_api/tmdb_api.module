@@ -1,0 +1,162 @@
+<?php
+
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\path_alias\Entity\PathAlias;
+
+/**
+ * Implements hook_theme().
+ */
+function tmdb_api_theme($existing, $type, $theme, $path)
+{
+  return [
+    'movie_page' => [
+      'variables' => [
+        'title' => NULL,
+        'intro_text' => NULL,
+        'movies' => [],
+        // 'genre_id' => NULL,
+        'api_url' => NULL,
+      ],
+    ],
+    'movie_detail_page' => [
+      'variables' => [
+        'movie' => NULL,
+        'cast' => [],
+      ],
+    ],
+    'movie_home' => [
+      'variables' => [
+        'popular_movies' => [],
+        'now_playing_movies' => [],
+      ],
+    ],
+    'movie_search_bar' => [
+      'variables' => [],
+    ],
+    'movie_card' => [
+      'variables' => [
+        'movie' => NULL,
+      ],
+    ],
+    'movie_carousel' => [
+      'variables' => [
+        'title' => NULL,
+        'movies' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function tmdb_api_cron()
+{
+  $tmdb_client = \Drupal::service('tmdb_api.client');
+  $menu_name = 'main'; // Nom machine de ton menu
+
+  // 1. TROUVER LE PARENT "Genres"
+  // On cherche le lien de menu qui a pour titre "Genres"
+  $parent_id = NULL;
+  $parent_links = \Drupal::entityTypeManager()
+    ->getStorage('menu_link_content')
+    ->loadByProperties([
+      'title' => 'Genres',
+      'menu_name' => $menu_name
+    ]);
+
+  if (!empty($parent_links)) {
+    $parent_link = reset($parent_links);
+    // C'est cet ID complexe (plugin_id) dont Drupal a besoin
+    $parent_id = $parent_link->getPluginId();
+  } else {
+    // Si tu n'as pas encore créé le lien "Genres" dans l'interface, 
+    // le script s'arrête pour ne pas polluer la racine du menu.
+    \Drupal::logger('tmdb_api')->warning('Le menu parent "Genres" n\'a pas été trouvé. Veuillez le créer manuellement dans le menu "main".');
+    return;
+  }
+
+  // 2. RÉCUPÉRATION DES DONNÉES TMDB
+  $genres_fr = $tmdb_client->getGenres('fr-FR');
+  $genres_en = $tmdb_client->getGenres('en-US');
+
+  if (empty($genres_fr)) return;
+
+  $genres_en_keyed = [];
+  foreach ($genres_en as $genre) {
+    $genres_en_keyed[$genre['id']] = $genre['name'];
+  }
+  // 3. BOUCLE DE CRÉATION DES SOUS-MENUS
+  foreach ($genres_fr as $genre) {
+    $tmdb_id = $genre['id'];
+    $name_fr = $genre['name'];
+    $name_en = $genres_en_keyed[$tmdb_id] ?? $name_fr;
+
+    // --- NOUVEAUTÉ : CRÉATION DE L'ALIAS ---
+
+    // 1. On "nettoie" le nom du genre pour l'URL (ex: "Comédie" -> "comedie", "Science Fiction" -> "science-fiction")
+    $slug = \Drupal::service('transliteration')->transliterate($name_fr, 'fr');
+    $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $slug), '-'));
+
+    $system_path = '/genres/' . $tmdb_id; // Le vrai chemin machine
+    $alias_path = '/genres/' . $slug;     // Le joli chemin pour le visiteur
+
+    // 2. On vérifie si l'alias existe déjà, sinon on le crée
+    $alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+
+    // MODIFICATION 1 : On enlève le 'langcode' => 'fr' ici
+    $existing_alias = $alias_storage->loadByProperties(['path' => $system_path]);
+
+    if (empty($existing_alias)) {
+      $path_alias = PathAlias::create([
+        'path' => $system_path,
+        'alias' => $alias_path,
+        // MODIFICATION 2 : On remplace 'fr' par la constante "Non spécifié"
+        'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      ]);
+      $path_alias->save();
+      // Optionnel : faire pareil pour l'anglais si tu gères l'alias en anglais
+      // $slug_en = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $name_en), '-'));
+      // PathAlias::create(['path' => $system_path, 'alias' => '/genres/' . $slug_en, 'langcode' => 'en'])->save();
+    }
+
+
+    // ---------------------------------------
+
+    // L'URI du menu DOIT rester le chemin système. 
+    // Drupal affichera automatiquement l'alias à la place sur le site !
+    $uri = 'internal:/genres/' . $tmdb_id;
+
+    try {
+      // Vérifier si le sous-menu existe déjà
+      $existing = \Drupal::entityTypeManager()
+        ->getStorage('menu_link_content')
+        ->loadByProperties(['title' => $name_fr, 'menu_name' => $menu_name]);
+
+      if (empty($existing)) {
+        $menu_link = MenuLinkContent::create([
+          'title' => $name_fr,
+          'link' => ['uri' => $uri],
+          'menu_name' => $menu_name,
+          'parent' => $parent_id,
+          'expanded' => TRUE,
+          'weight' => 0,
+        ]);
+        $menu_link->save();
+
+        // Traduction
+        if (\Drupal::languageManager()->getLanguage('en')) {
+          $menu_link->addTranslation('en', [
+            'title' => $name_en,
+          ])->save();
+        }
+      }
+    } catch (\Exception $e) {
+      \Drupal::logger('tmdb_api')->error("Erreur sur le genre @genre : @msg", [
+        '@genre' => $name_fr,
+        '@msg' => $e->getMessage(),
+      ]);
+    }
+  }
+}

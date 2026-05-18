@@ -1,0 +1,108 @@
+{# web/themes/custom/tmdb_theme/templates/menu--main.html.twig #}
+{% import _self as menus %}
+
+<div class="flex items-center justify-between w-full px-4 md:px-8">
+  
+  {# 1. PARTIE GAUCHE : LE LOGO #}
+  <div class="flex-1 flex justify-start">
+    <a href="{{ path('<front>') }}" title="Accueil Pop Movies" class="flex-shrink-0 transition-transform duration-300 hover:scale-105">
+      <img src="/themes/custom/tmdb_theme/images/logo.svg" alt="Logo Pop Movies" class="h-16 md:h-24 w-auto" />
+    </a>
+  </div>
+
+  {# 2. PARTIE CENTRALE : LE MENU DE NAVIGATION #}
+  <div class="flex-none">
+    <nav aria-label="Menu principal">
+      {{ menus.menu_links(items, attributes, 0) }}
+    </nav>
+  </div>
+
+  {# 3. PARTIE DROITE : LANGUES ET CONNEXION/PROFIL #}
+  <div class="flex-1 flex justify-end items-center gap-4 md:gap-6">
+    
+    {# Sélecteur de langue statique (à lier avec le Switcher Drupal si nécessaire) #}
+    <select class="bg-transparent text-pop-blanc/80 border border-pop-toile rounded-md px-2 py-1.5 text-sm focus:outline-none focus:border-pop-or hover:text-pop-blanc cursor-pointer transition-colors">
+      <option value="fr" class="text-black">FR</option>
+      <option value="en" class="text-black">EN</option>
+    </select>
+
+    {# Gestion Utilisateur : Connecté ou Déconnecté #}
+    {% if logged_in %}
+      {# Si connecté : Avatar profil (rond) #}
+      <a href="{{ path('user.page') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-pop-or overflow-hidden transition-transform duration-300 hover:scale-105 shadow-[0_0_8px_rgba(255,193,7,0.4)]" title="Mon Profil">
+        {# Tu pourras remplacer src par l'URL de l'image de l'utilisateur plus tard #}
+        <img src="/themes/custom/tmdb_theme/images/default-avatar.png" alt="Profil utilisateur" class="w-full h-full object-cover bg-pop-nuit" />
+      </a>
+    {% else %}
+      {# Si non connecté : Bouton Se connecter #}
+      <a href="{{ path('user.login') }}" class="px-4 py-1 text-sm md:text-base font-semibold text-pop-nuit bg-pop-or rounded-full hover:bg-pop-blanc hover:shadow-[0_0_15px_rgba(255,193,7,0.6)] transition-all duration-300">
+        Se connecter
+      </a>
+    {% endif %}
+
+  </div>
+</div>
+
+{# --- LA MACRO ORIGINALE RESTE INCHANGÉE --- #}
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    
+    {# Si on est au NIVEAU 0 (Menu principal horizontal) #}
+    {% if menu_level == 0 %}
+      <ul class="flex items-center gap-6 md:gap-10 text-[15px] font-medium tracking-wide">
+    {# Si on est au NIVEAU 1 (Sous-menu déroulant) #}
+    {% else %}
+      {# Le 'pt-6' sert de pont invisible pour que la souris ne perde pas le survol #}
+      <div class="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+        <ul class="w-52 bg-pop-nuit/95 backdrop-blur-xl border border-pop-toile rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden py-3 flex flex-col">
+    {% endif %}
+
+      {% for item in items %}
+        {# On vérifie si ce lien a des enfants #}
+        {% set has_children = item.below ? true : false %}
+        
+        {# On ajoute 'group' au <li> parent pour déclencher l'affichage au survol #}
+        <li class="{{ menu_level == 0 ? 'relative group' : 'w-full' }}">
+          
+          {# LIENS DU NIVEAU 0 #}
+          {% if menu_level == 0 %}
+            <a href="{{ item.url }}" 
+               class="relative flex items-center gap-1 py-2 transition-all duration-300 ease-out cursor-pointer
+                      {{ item.in_active_trail ? 'text-pop-blanc drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-pop-blanc/70 hover:text-pop-blanc' }}
+                      after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 
+                      after:h-[2px] after:bg-pop-or after:transition-all after:duration-300 after:shadow-[0_0_8px_#FFC107]
+                      {{ item.in_active_trail ? 'after:w-full' : 'after:w-0 group-hover:after:w-full' }}
+                      ">
+              {{ item.title }}
+              
+              {# Petit chevron si enfants #}
+              {% if has_children %}
+                <svg class="w-4 h-4 opacity-70 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              {% endif %}
+            </a>
+
+          {# LIENS DU NIVEAU 1 (Enfants dans la boîte) #}
+          {% else %}
+            <a href="{{ item.url }}" 
+               class="block px-6 py-2.5 text-sm text-pop-blanc/70 hover:text-pop-or hover:bg-white/5 transition-colors duration-200">
+              {{ item.title }}
+            </a>
+          {% endif %}
+
+          {# RÉCURSIVITÉ : Si le lien a des enfants, on rappelle la macro ! #}
+          {% if item.below %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+          {% endif %}
+        </li>
+      {% endfor %}
+      
+    {% if menu_level == 0 %}
+      </ul>
+    {% else %}
+        </ul>
+      </div>
+    {% endif %}
+    
+  {% endif %}
+{% endmacro %}

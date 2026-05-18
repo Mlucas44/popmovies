@@ -1,0 +1,5 @@
+name: 'TMDB API'
+type: module
+description: 'Service custom pour communiquer avec The Movie Database.'
+package: Custom
+core_version_requirement: ^11
