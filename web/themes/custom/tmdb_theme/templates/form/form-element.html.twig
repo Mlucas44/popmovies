@@ -1,0 +1,37 @@
+{%
+  set classes = [
+    'js-form-item',
+    'form-item',
+    'js-form-type-' ~ type|clean_class,
+    'form-type-' ~ type|clean_class,
+    name ? 'js-form-item-' ~ name|clean_class,
+    name ? 'form-item-' ~ name|clean_class,
+    title_display not in ['after', 'before'] ? 'form-no-label',
+    disabled == 'disabled' ? 'form-disabled',
+    errors ? 'form-item--error',
+    'mb-5 flex flex-col'
+  ]
+%}
+<div{{attributes.addClass(classes)}}>
+	{% if label_display in ['before', 'invisible'] %}
+		{{ label }}
+	{% endif %}
+
+	{{ children }}
+
+	{% if label_display == 'after' %}
+		{{ label }}
+	{% endif %}
+
+	{% if errors %}
+		<div class="text-pop-rouge text-sm mt-1 font-semibold">
+			{{ errors }}
+		</div>
+	{% endif %}
+
+	{% if description %}
+		<div{{description.attributes.addClass('text-xstext-pop-mutemt-2opacity-80')}}>
+			{{ description.content }}
+		</div>
+	{% endif %}
+</div>
