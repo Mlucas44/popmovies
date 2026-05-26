@@ -1,18 +1,21 @@
-<div class="min-h-screen bg-pop-nuit text-pop-blanc flex flex-col font-sans selection:bg-pop-or selection:text-pop-nuit">
-  
-  {# --- RÉGION HEADER (Liquid Glass) --- #}
-  <header class="bg-pop-nuit/50 backdrop-blur-xl sticky top-0 z-50 border-b border-pop-toile shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-    <div class="container mx-auto">
-       {{ page.header }}
-    </div>
-  </header>
+<div
+	class="min-h-screen bg-pop-nuit text-pop-blanc flex flex-col font-sans selection:bg-pop-or selection:text-pop-nuit">
 
-  {# --- RÉGION CONTENU --- #}
-  <main class="flex-grow w-full">
-    {{ page.content }}
-  </main>
+	{# --- RÉGION HEADER --- #}
+	<header class="bg-pop-nuit/50 backdrop-blur-xl sticky top-0 z-50 border-b border-pop-toile shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+		<div class="container mx-auto">
+			{{ page.header }}
+		</div>
+	</header>
 
-  {# --- RÉGION FOOTER --- #}
-  {% include '@tmdb_theme/includes/footer.html.twig' %}
+	{# --- RÉGION CONTENU --- #}
+	<main class="flex-grow w-full">
+		{% block main_content %}
+			{{ page.content }}
+		{% endblock %}
+	</main>
+
+	{# --- RÉGION FOOTER --- #}
+	{% include '@tmdb_theme/includes/footer.html.twig' %}
 
 </div>

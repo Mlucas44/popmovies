@@ -1,0 +1,18 @@
+{% extends "page.html.twig" %}
+
+{% block main_content %}
+	<div class="w-full flex flex-col justify-center items-center px-4 py-20 min-h-[60vh]">
+		<div class="text-center max-w-lg">
+			<h1 class="text-8xl font-bold text-pop-rouge mb-4 drop-shadow-[0_0_15px_rgba(224,19,19,0.5)]">404</h1>
+			<h2 class="text-3xl font-bold text-pop-blanc mb-6">Page Introuvable</h2>
+
+			<div class="bg-pop-toile border border-pop-nuit shadow-[0_8px_30px_rgba(0,0,0,0.6)] rounded-2xl p-6 mb-8 text-pop-mute text-lg">
+				{{ page.content }}
+			</div>
+
+			<a href="/" class="inline-block px-8 py-3 bg-transparent border-2 border-pop-rouge text-pop-rouge font-semibold rounded-full hover:bg-pop-rouge hover:text-pop-blanc transition-all duration-300">
+				Retourner à l'accueil
+			</a>
+		</div>
+	</div>
+{% endblock %}
