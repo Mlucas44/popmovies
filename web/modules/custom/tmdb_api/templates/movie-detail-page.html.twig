@@ -1,57 +1,83 @@
 {# web/modules/custom/tmdb_api/templates/movie-detail-page.html.twig #}
 
-<div class="relative w-full min-h-[70vh] flex items-center justify-center pt-20 pb-12">
-  
-  {# Image de fond (backdrop) #}
-  {% if movie.backdrop_path %}
-    <div class="absolute inset-0 z-0">
-      <img src="https://image.tmdb.org/t/p/original{{ movie.backdrop_path }}" alt="{{ movie.title }}" class="w-full h-full object-cover opacity-30">
-      <div class="absolute inset-0 bg-gradient-to-t from-pop-nuit via-pop-nuit/80 to-transparent"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-pop-nuit via-pop-nuit/50 to-transparent"></div>
-    </div>
-  {% endif %}
+<div
+	class="relative w-full min-h-[70vh] flex items-center justify-center pt-20 pb-12">
 
-  <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row gap-10 items-center md:items-start">
-    
-    {# Affiche du film #}
-    <div class="w-2/3 sm:w-1/3 md:w-1/4 flex-shrink-0">
-      {% if movie.poster_path %}
-        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" class="rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-pop-toile">
-      {% endif %}
-    </div>
+	{# Image de fond (backdrop) #}
+	{% if movie.backdrop_path %}
+		<div class="absolute inset-0 z-0">
+			<img src="https://image.tmdb.org/t/p/original{{ movie.backdrop_path }}" alt="{{ movie.title }}" class="w-full h-full object-cover opacity-30">
+			<div class="absolute inset-0 bg-gradient-to-t from-pop-nuit via-pop-nuit/80 to-transparent"></div>
+			<div class="absolute inset-0 bg-gradient-to-r from-pop-nuit via-pop-nuit/50 to-transparent"></div>
+		</div>
+	{% endif %}
 
-    {# Infos du film #}
-    <div class="flex flex-col flex-grow text-center md:text-left">
-      <h1 class="text-4xl md:text-6xl font-black text-pop-blanc mb-2">{{ movie.title }}</h1>
-      
-      <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-pop-blanc/70 text-sm font-medium mb-6">
-        <span>{{ movie.release_date|date('Y') }}</span>
-        <span>•</span>
-        <span>{{ movie.runtime }} min</span>
-        <span>•</span>
-        <div class="flex items-center gap-1 text-pop-or">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          {{ movie.vote_average|number_format(1) }}
-        </div>
-      </div>
+	<div
+		class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row gap-10 items-center md:items-start">
 
-      <div class="mb-6 flex flex-wrap justify-center md:justify-start gap-2">
-        {% for genre in movie.genres %}
-          <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-pop-blanc backdrop-blur-sm">{{ genre.name }}</span>
-        {% endfor %}
-      </div>
+		{# Affiche du film #}
+		<div class="w-2/3 sm:w-1/3 md:w-1/4 flex-shrink-0">
+			{% if movie.poster_path %}
+				<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" class="rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-pop-toile">
+			{% endif %}
+		</div>
 
-      <p class="text-pop-blanc/80 text-lg leading-relaxed mb-8 max-w-3xl">
-        {{ movie.overview }}
-      </p>
+		{# Infos du film #}
+		<div class="flex flex-col flex-grow text-center md:text-left">
+			<h1 class="text-4xl md:text-6xl font-black text-pop-blanc mb-2">{{ movie.title }}</h1>
 
-      {# Bouton (pour plus tard) #}
-      <div>
-        <button class="bg-pop-rouge hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full transition-colors duration-300 shadow-lg shadow-pop-rouge/30">
-          Regarder la bande-annonce
-        </button>
-      </div>
+			<div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-pop-blanc/70 text-sm font-medium mb-6">
+				<span>{{ movie.release_date|date('Y') }}</span>
+				<span>•</span>
+				<span>{{ movie.runtime }}
+					min</span>
+				<span>•</span>
+				<div class="flex items-center gap-1 text-pop-or">
+					<svg class="w-4 h-4 fill-current" viewbox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+					{{ movie.vote_average|number_format(1) }}
+				</div>
+			</div>
 
-    </div>
-  </div>
+			<div class="mb-6 flex flex-wrap justify-center md:justify-start gap-2">
+				{% for genre in movie.genres %}
+					<span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-pop-blanc backdrop-blur-sm">{{ genre.name }}</span>
+				{% endfor %}
+			</div>
+
+			<p class="text-pop-blanc/80 text-lg leading-relaxed mb-8 max-w-3xl">
+				{{ movie.overview }}
+			</p>
+
+			{# Actions Utlisateur #}
+			<div class="mb-8 flex flex-wrap justify-center md:justify-start items-center gap-4">
+				{{ attach_library('tmdb_theme/movie_actions') }}
+
+				{# Liked Button #}
+				<button class="js-movie-action-btn flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-pop-toile shadow-md transition-all duration-300 {{ 'liked' in user_actions ? 'bg-pop-rouge text-white' : 'bg-pop-nuit text-pop-blanc hover:bg-pop-toile' }}" data-action-type="liked" data-tmdb-id="{{ movie.id }}" data-runtime="{{ movie.runtime|default(0) }}" data-uid="{{ uid }}">
+					<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+					</svg>
+					<span class="font-semibold text-sm">J'aime</span>
+				</button>
+
+				{# Watched Button #}
+				<button class="js-movie-action-btn flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-pop-toile shadow-md transition-all duration-300 {{ 'watched' in user_actions ? 'bg-blue-600 text-white' : 'bg-pop-nuit text-pop-blanc hover:bg-pop-toile' }}" data-action-type="watched" data-tmdb-id="{{ movie.id }}" data-runtime="{{ movie.runtime|default(0) }}" data-uid="{{ uid }}">
+					<svg class="w-5 h-5 fill-transparent stroke-current stroke-2" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+						<path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+					</svg>
+					<span class="font-semibold text-sm">Vu</span>
+				</button>
+
+				{# Watchlist Button #}
+				<button class="js-movie-action-btn flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-pop-toile shadow-md transition-all duration-300 {{ 'watchlist' in user_actions ? 'bg-pop-or text-pop-nuit' : 'bg-pop-nuit text-pop-blanc hover:bg-pop-toile' }}" data-action-type="watchlist" data-tmdb-id="{{ movie.id }}" data-runtime="{{ movie.runtime|default(0) }}" data-uid="{{ uid }}">
+					<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+					</svg>
+					<span class="font-semibold text-sm">À voir</span>
+				</button>
+			</div>
+
+		</div>
+	</div>
 </div>

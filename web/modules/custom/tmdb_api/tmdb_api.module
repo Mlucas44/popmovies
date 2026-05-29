@@ -15,7 +15,6 @@ function tmdb_api_theme($existing, $type, $theme, $path)
         'title' => NULL,
         'intro_text' => NULL,
         'movies' => [],
-        // 'genre_id' => NULL,
         'api_url' => NULL,
       ],
     ],
@@ -23,6 +22,8 @@ function tmdb_api_theme($existing, $type, $theme, $path)
       'variables' => [
         'movie' => NULL,
         'cast' => [],
+        'user_actions' => [],
+        'uid' => 0,
       ],
     ],
     'movie_home' => [

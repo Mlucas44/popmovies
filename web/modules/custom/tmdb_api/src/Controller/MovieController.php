@@ -64,7 +64,7 @@ class MovieController extends ControllerBase
         '#movie' => $movie,
       ];
       $result[] = [
-        'html' => (string) $renderer->renderPlain($build),
+        'html' => (string) $this->renderer->renderPlain($build),
       ];
     }
     return new JsonResponse($result);
@@ -161,10 +161,28 @@ class MovieController extends ControllerBase
 
     $cast = array_slice($cast_full, 0, 5);
 
+    // Initialiser les actions vides.
+    $user_actions = [];
+    $uid = $this->currentUser()->id();
+    if ($uid) {
+      $query = \Drupal::database()->select('tmdb_movie_actions', 't')
+        ->fields('t', ['action_type'])
+        ->condition('uid', $uid)
+        ->condition('tmdb_id', (int) $id)
+        ->execute();
+      $user_actions = $query->fetchCol(); // Retourne ['liked', 'watchlist', ...]
+    }
+
     return [
       '#theme' => 'movie_detail_page',
       '#movie' => $movie,
       '#cast' => $cast,
+      '#user_actions' => $user_actions,
+      '#uid' => $uid,
+      '#cache' => [
+        'contexts' => ['user'],
+        'tags' => ['movie_actions:' . $id . ':' . $uid],
+      ],
     ];
   }
 

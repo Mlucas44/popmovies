@@ -96,6 +96,14 @@ tmdb_api.search:
   requirements:
     _permission: 'access content'
 
+tmdb_api.movie_action_toggle:
+  path: '/api/movies/action/toggle'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\MovieActionController::toggle'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+
 tmdb_api.home:
   path: '/home'
   defaults:

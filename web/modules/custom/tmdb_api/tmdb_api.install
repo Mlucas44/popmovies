@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the TMDB API module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function tmdb_api_schema()
+{
+  $schema['tmdb_movie_actions'] = [
+    'description' => 'Enregistre les actions des utilisateurs (liked, watched, watchlist) sur les films TMDB.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "L'ID de l'utilisateur Drupal courant.",
+      ],
+      'tmdb_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'ID du film venant de l\'API TMDB.',
+      ],
+      'action_type' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => 'Le type d\'action : liked, watched, watchlist.',
+      ],
+      'runtime' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Durée du film en minutes.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp de la création de l\'action.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'uid_tmdb_id' => ['uid', 'tmdb_id'],
+      'action_type' => ['action_type'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Creates the tmdb_movie_actions table.
+ */
+function tmdb_api_update_10001()
+{
+  $schema = \Drupal::database()->schema();
+  $table_name = 'tmdb_movie_actions';
+  if (!$schema->tableExists($table_name)) {
+    $schema->createTable($table_name, tmdb_api_schema()[$table_name]);
+  }
+}

@@ -1308,6 +1308,11 @@ html,
   background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1));
 }
 
+.bg-blue-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+}
+
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
@@ -1369,6 +1374,18 @@ html,
 
 .fill-current {
   fill: currentColor;
+}
+
+.fill-transparent {
+  fill: transparent;
+}
+
+.stroke-current {
+  stroke: currentColor;
+}
+
+.stroke-2 {
+  stroke-width: 2;
 }
 
 .object-cover {
@@ -1755,6 +1772,12 @@ html,
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .shadow-pop-rouge\/30 {
   --tw-shadow-color: rgb(255 42 84 / 0.3);
   --tw-shadow: var(--tw-shadow-colored);
@@ -2044,6 +2067,11 @@ html,
 .hover\:bg-pop-rouge:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 42 84 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-pop-toile:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(26 34 53 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-pop-blanc:hover {

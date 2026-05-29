@@ -33,3 +33,11 @@ carousel:
   dependencies:
     - core/drupal
     - core/once
+
+movie_actions:
+  version: 1.0
+  js:
+    js/movie-actions.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
