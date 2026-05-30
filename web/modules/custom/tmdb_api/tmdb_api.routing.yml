@@ -104,6 +104,30 @@ tmdb_api.movie_action_toggle:
   requirements:
     _permission: 'access content'
 
+tmdb_api.profile_dashboard:
+  path: '/profile'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\ProfileController::dashboard'
+    _title: 'Mon profil'
+  requirements:
+    _permission: 'access content'
+
+tmdb_api.profile_list:
+  path: '/profile/{type}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\ProfileController::listPage'
+  requirements:
+    _permission: 'access content'
+    type: 'liked|watched|watchlist'
+
+tmdb_api.profile_list_api:
+  path: '/api/profile/{type}/{page}'
+  defaults:
+    _controller: '\Drupal\tmdb_api\Controller\ProfileController::listApi'
+  requirements:
+    _permission: 'access content'
+    type: 'liked|watched|watchlist'
+    page: '\d+'
 tmdb_api.home:
   path: '/home'
   defaults:

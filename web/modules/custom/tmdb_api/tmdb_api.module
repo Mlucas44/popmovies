@@ -26,6 +26,20 @@ function tmdb_api_theme($existing, $type, $theme, $path)
         'uid' => 0,
       ],
     ],
+    'profile_dashboard_page' => [
+      'variables' => [
+        'stats' => [],
+        'recent_actions' => [],
+      ],
+    ],
+    'profile_list_page' => [
+      'variables' => [
+        'title' => NULL,
+        'intro_text' => NULL,
+        'movies' => [],
+        'api_url' => NULL,
+      ],
+    ],
     'movie_home' => [
       'variables' => [
         'popular_movies' => [],
@@ -69,8 +83,8 @@ function tmdb_api_cron()
 
   if (!empty($parent_links)) {
     $parent_link = reset($parent_links);
-    // C'est cet ID complexe (plugin_id) dont Drupal a besoin
-    $parent_id = $parent_link->getPluginId();
+    // Parent attendu par Drupal au format plugin_id basé sur le UUID de l'entité.
+    $parent_id = 'menu_link_content:' . $parent_link->uuid();
   } else {
     // Si tu n'as pas encore créé le lien "Genres" dans l'interface, 
     // le script s'arrête pour ne pas polluer la racine du menu.

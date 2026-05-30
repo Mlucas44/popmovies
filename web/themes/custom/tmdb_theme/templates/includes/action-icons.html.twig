@@ -1,0 +1,20 @@
+{# web/themes/custom/tmdb_theme/templates/includes/action-icons.html.twig #}
+
+{% macro liked(classes) %}
+  <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+  </svg>
+{% endmacro %}
+
+{% macro watched(classes) %}
+  <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+{% endmacro %}
+
+{% macro watchlist(classes) %}
+  <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+  </svg>
+{% endmacro %}

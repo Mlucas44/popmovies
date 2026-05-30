@@ -29,7 +29,7 @@
     {# Gestion Utilisateur : Connecté ou Déconnecté #}
     {% if logged_in %}
       {# Si connecté : Avatar profil (rond) #}
-      <a href="{{ path('user.page') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-pop-or overflow-hidden transition-transform duration-300 hover:scale-105 shadow-[0_0_8px_rgba(255,193,7,0.4)]" title="Mon Profil">
+      <a href="{{ path('tmdb_api.profile_dashboard') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-pop-or overflow-hidden transition-transform duration-300 hover:scale-105 shadow-[0_0_8px_rgba(255,193,7,0.4)]" title="Mon Profil">
         {# Tu pourras remplacer src par l'URL de l'image de l'utilisateur plus tard #}
         <img src="/themes/custom/tmdb_theme/images/default-avatar.png" alt="Profil utilisateur" class="w-full h-full object-cover bg-pop-nuit" />
       </a>
