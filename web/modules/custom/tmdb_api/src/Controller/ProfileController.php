@@ -95,6 +95,7 @@ class ProfileController extends ControllerBase
       'watched_count' => 0,
       'watchlist_count' => 0,
       'watched_runtime_minutes' => 0,
+      'watched_runtime_formatted' => '0 min',
       'total_actions' => count($actions),
     ];
 
@@ -118,10 +119,13 @@ class ProfileController extends ControllerBase
           'tmdb_id' => (int) $action['tmdb_id'],
           'movie_title' => $movie_details['title'] ?? ('Film #' . (int) $action['tmdb_id']),
           'runtime' => (int) $action['runtime'],
+          'runtime_formatted' => $this->tmdbClient->formatRuntime((int) $action['runtime']),
           'created' => $this->dateFormatter->format((int) $action['created'], 'short'),
         ];
       }
     }
+
+    $stats['watched_runtime_formatted'] = $this->tmdbClient->formatRuntime($stats['watched_runtime_minutes']);
 
     return [
       '#theme' => 'profile_dashboard_page',
@@ -174,7 +178,7 @@ class ProfileController extends ControllerBase
     return [
       '#theme' => 'movie_page',
       '#title' => $title_map[$type] ?? ucfirst($type),
-      '#intro_text' => '',
+      '#intro_text' => $title_map[$type] ?? ucfirst($type),
       '#movies' => $movies,
       '#api_url' => '/api/profile/' . $type,
       '#cache' => [

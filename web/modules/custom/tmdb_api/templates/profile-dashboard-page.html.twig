@@ -22,8 +22,7 @@
 
 					<div class="rounded-2xl border border-pop-or/30 bg-pop-nuit/60 px-5 py-4 min-w-[220px]">
 						<p class="text-pop-mute text-sm">Temps regardé</p>
-						<p class="text-3xl font-black text-pop-or">{{ (stats.watched_runtime_minutes|default(0) / 60)|round(1, 'floor') }}
-							h</p>
+						<p class="text-3xl font-black text-pop-or">{{ stats.watched_runtime_formatted|default('0 min') }}</p>
 					</div>
 				</div>
 
@@ -88,14 +87,14 @@
 						{% for action in recent_actions %}
 							<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 rounded-2xl bg-pop-nuit/60 border border-white/10 px-4 py-3">
 								<div>
-										<p class="text-pop-blanc font-semibold">{{ action.action_type|capitalize }}
-											- {{ action.movie_title }}</p>
+									<p class="text-pop-blanc font-semibold">{{ action.action_type|capitalize }}
+										-
+										{{ action.movie_title }}</p>
 									<p class="text-pop-mute text-sm">Ajouté le
 										{{ action.created }}</p>
 								</div>
 								{% if action.runtime > 0 %}
-									<span class="text-pop-or font-bold">{{ action.runtime }}
-										min</span>
+									<span class="text-pop-or font-bold">{{ action.runtime_formatted|default(action.runtime ~ ' min') }}</span>
 								{% endif %}
 							</div>
 						{% endfor %}

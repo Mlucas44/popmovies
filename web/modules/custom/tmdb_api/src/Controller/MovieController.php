@@ -156,6 +156,7 @@ class MovieController extends ControllerBase
   public function detail($id)
   {
     $movie = $this->tmdbClient->getMovieDetails((int) $id);
+    $movie['runtime_formatted'] = $this->tmdbClient->formatRuntime((int) ($movie['runtime'] ?? 0));
 
     $cast_full = $this->tmdbClient->getMovieCredits((int) $id);
 

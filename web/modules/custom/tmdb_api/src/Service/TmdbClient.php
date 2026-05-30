@@ -203,4 +203,23 @@ class TmdbClient
     ], 3600);
     return $data['results'] ?? [];
   }
+
+  /**
+   * Formatte une durée en minutes en chaîne lisible (ex: 2h 05min).
+   */
+  public function formatRuntime(int $minutes): string
+  {
+    if ($minutes <= 0) {
+      return '0 min';
+    }
+
+    $hours = intdiv($minutes, 60);
+    $remaining_minutes = $minutes % 60;
+
+    if ($hours === 0) {
+      return $remaining_minutes . ' min';
+    }
+
+    return $hours . 'h ' . str_pad((string) $remaining_minutes, 2, '0', STR_PAD_LEFT) . 'min';
+  }
 }
