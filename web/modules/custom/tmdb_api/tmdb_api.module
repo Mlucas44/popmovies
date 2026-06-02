@@ -30,6 +30,8 @@ function tmdb_api_theme($existing, $type, $theme, $path)
       'variables' => [
         'stats' => [],
         'recent_actions' => [],
+        'account_edit_link' => NULL,
+        'logout_link' => NULL,
       ],
     ],
     'profile_list_page' => [

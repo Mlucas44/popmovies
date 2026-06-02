@@ -14,7 +14,7 @@
           e.preventDefault();
 
           if (button.dataset.uid === '0') {
-            window.location.href = '/user/login';
+            window.location.href = '/user/login?destination=/profile';
             return;
           }
 
@@ -40,7 +40,7 @@
           })
             .then(response => {
               if (response.status === 403) {
-                window.location.href = '/user/login';
+                window.location.href = '/user/login?destination=/profile';
                 throw new Error('Not logged in');
               }
 

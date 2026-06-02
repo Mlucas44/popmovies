@@ -6,7 +6,7 @@
 		<div class="max-w-3xl mx-auto bg-pop-toile border border-pop-nuit rounded-2xl p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
 			<h1 class="text-3xl font-black text-pop-blanc mb-3">Accès au profil</h1>
 			<p class="text-pop-mute mb-6">Tu dois être connecté pour consulter ton dashboard personnel.</p>
-			<a href="/user/login" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-pop-or text-pop-nuit font-bold hover:opacity-95 transition-opacity">
+			<a href="/user/login?destination=/profile" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-pop-or text-pop-nuit font-bold hover:opacity-95 transition-opacity">
 				Se connecter
 			</a>
 		</div>
@@ -26,59 +26,67 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-					<div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-						<p class="text-pop-mute text-sm mb-1">Liked</p>
-						<p class="text-3xl font-black text-pop-blanc">{{ stats.liked_count|default(0) }}</p>
-					</div>
-					<div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-						<p class="text-pop-mute text-sm mb-1">Watched</p>
-						<p class="text-3xl font-black text-pop-blanc">{{ stats.watched_count|default(0) }}</p>
-					</div>
-					<div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-						<p class="text-pop-mute text-sm mb-1">Watchlist</p>
-						<p class="text-3xl font-black text-pop-blanc">{{ stats.watchlist_count|default(0) }}</p>
-					</div>
-					<div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-						<p class="text-pop-mute text-sm mb-1">Actions</p>
-						<p class="text-3xl font-black text-pop-blanc">{{ stats.total_actions|default(0) }}</p>
+				<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-8">
+					<a href="/profile/liked" class="group rounded-2xl border border-white/10 bg-white/5 p-4 lg:p-5 min-h-[146px] transition-all duration-300 hover:-translate-y-1 hover:border-pop-rouge hover:bg-white/7 hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+						<div class="flex items-start justify-between gap-4">
+							<div>
+								<p class="text-pop-mute text-sm mb-1">Liked</p>
+								<p class="text-2xl lg:text-[1.7rem] font-black text-pop-blanc">{{ stats.liked_count|default(0) }}</p>
+							</div>
+							<div class="w-11 h-11 rounded-full bg-pop-rouge/20 text-pop-rouge flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
+								{{ action_icons.liked('w-5 h-5 fill-current') }}
+							</div>
+						</div>
+						<p class="text-pop-mute text-sm mt-3 max-w-xs">Tous les films que tu as mis en favori.</p>
+					</a>
+
+					<a href="/profile/watched" class="group rounded-2xl border border-white/10 bg-white/5 p-4 lg:p-5 min-h-[146px] transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-white/7 hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+						<div class="flex items-start justify-between gap-4">
+							<div>
+								<p class="text-pop-mute text-sm mb-1">Watched</p>
+								<p class="text-2xl lg:text-[1.7rem] font-black text-pop-blanc">{{ stats.watched_count|default(0) }}</p>
+							</div>
+							<div class="w-11 h-11 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
+								{{ action_icons.watched('w-5 h-5 fill-transparent stroke-current stroke-2') }}
+							</div>
+						</div>
+						<p class="text-pop-mute text-sm mt-3 max-w-xs">Les films que tu as déjà vus.</p>
+					</a>
+
+					<a href="/profile/watchlist" class="group rounded-2xl border border-white/10 bg-white/5 p-4 lg:p-5 min-h-[146px] transition-all duration-300 hover:-translate-y-1 hover:border-pop-or hover:bg-white/7 hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+						<div class="flex items-start justify-between gap-4">
+							<div>
+								<p class="text-pop-mute text-sm mb-1">Watchlist</p>
+								<p class="text-2xl lg:text-[1.7rem] font-black text-pop-blanc">{{ stats.watchlist_count|default(0) }}</p>
+							</div>
+							<div class="w-11 h-11 rounded-full bg-pop-or/20 text-pop-or flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
+								{{ action_icons.watchlist('w-5 h-5 fill-current') }}
+							</div>
+						</div>
+						<p class="text-pop-mute text-sm mt-3 max-w-xs">Les films que tu veux voir plus tard.</p>
+					</a>
+
+					<div class="rounded-2xl border border-pop-or/30 bg-[linear-gradient(180deg,rgba(255,193,7,0.10),rgba(26,34,53,0.95))] p-4 lg:p-5 min-h-[146px] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+						<div class="flex items-start justify-between gap-4">
+							<div>
+								<p class="text-pop-mute text-sm mb-1">Compte</p>
+								<p class="text-xl font-black text-pop-blanc">Gérer mon profil</p>
+							</div>
+							<div class="w-11 h-11 rounded-full bg-pop-or/15 border border-pop-or/30 flex items-center justify-center text-pop-or shrink-0">
+								<svg class="w-5 h-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+									<circle cx="12" cy="7" r="4"></circle>
+								</svg>
+							</div>
+						</div>
+
+						<div class="mt-4 flex items-center gap-2 text-sm flex-wrap">
+							{{ account_edit_link }}
+							{{ logout_link }}
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<section>
-				<div class="grid md:grid-cols-3 gap-5">
-					<a href="/profile/liked" class="group rounded-3xl border border-pop-toile bg-pop-toile p-6 hover:border-pop-rouge transition-all duration-300 hover:-translate-y-1 shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
-						<div class="flex items-center justify-between mb-4">
-							<h2 class="text-2xl font-black text-pop-blanc">Liked</h2>
-							<span class="w-10 h-10 rounded-full bg-pop-rouge/20 text-pop-rouge flex items-center justify-center">
-								{{ action_icons.liked('w-5 h-5 fill-current') }}
-							</span>
-						</div>
-						<p class="text-pop-mute">Tous les films que tu as mis en favori.</p>
-					</a>
-
-					<a href="/profile/watched" class="group rounded-3xl border border-pop-toile bg-pop-toile p-6 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
-						<div class="flex items-center justify-between mb-4">
-							<h2 class="text-2xl font-black text-pop-blanc">Watched</h2>
-							<span class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
-								{{ action_icons.watched('w-5 h-5 fill-transparent stroke-current stroke-2') }}
-							</span>
-						</div>
-						<p class="text-pop-mute">Les films que tu as déjà vus.</p>
-					</a>
-
-					<a href="/profile/watchlist" class="group rounded-3xl border border-pop-toile bg-pop-toile p-6 hover:border-pop-or transition-all duration-300 hover:-translate-y-1 shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
-						<div class="flex items-center justify-between mb-4">
-							<h2 class="text-2xl font-black text-pop-blanc">Watchlist</h2>
-							<span class="w-10 h-10 rounded-full bg-pop-or/20 text-pop-or flex items-center justify-center">
-								{{ action_icons.watchlist('w-5 h-5 fill-current') }}
-							</span>
-						</div>
-						<p class="text-pop-mute">Les films que tu veux voir plus tard.</p>
-					</a>
-				</div>
-			</section>
 
 			{% if recent_actions is not empty %}
 				<section class="rounded-3xl border border-pop-toile bg-pop-toile p-6 md:p-8">

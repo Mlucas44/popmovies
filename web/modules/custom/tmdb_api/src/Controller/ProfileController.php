@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\tmdb_api\Service\TmdbClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,12 +77,11 @@ class ProfileController extends ControllerBase
     $uid = (int) $this->currentUser()->id();
 
     if ($uid === 0) {
-      return [
-        '#theme' => 'profile_dashboard_page',
-        '#stats' => [],
-        '#recent_actions' => [],
-        '#access_denied' => TRUE,
-      ];
+      return $this->redirect('user.login', [], [
+        'query' => [
+          'destination' => '/profile',
+        ],
+      ]);
     }
 
     $query = $this->database->select('tmdb_movie_actions', 't')
@@ -131,6 +131,30 @@ class ProfileController extends ControllerBase
       '#theme' => 'profile_dashboard_page',
       '#stats' => $stats,
       '#recent_actions' => $recent_actions,
+      '#account_edit_link' => [
+        '#type' => 'link',
+        '#title' => $this->t('Modifier'),
+        '#url' => Url::fromRoute('entity.user.edit_form', ['user' => $uid], [
+          'query' => [
+            'destination' => '/profile',
+          ],
+        ]),
+        '#attributes' => [
+          'class' => ['inline-flex', 'items-center', 'justify-center', 'px-4', 'py-2', 'rounded-full', 'bg-pop-or', 'text-pop-nuit', 'font-bold', 'hover:opacity-95', 'transition-opacity'],
+        ],
+      ],
+      '#logout_link' => [
+        '#type' => 'link',
+        '#title' => $this->t('Logout'),
+        '#url' => Url::fromRoute('user.logout', [], [
+          'query' => [
+            'destination' => '/home',
+          ],
+        ]),
+        '#attributes' => [
+          'class' => ['inline-flex', 'items-center', 'justify-center', 'px-4', 'py-2', 'rounded-full', 'border', 'border-white/15', 'bg-white/5', 'text-pop-blanc', 'font-semibold', 'hover:bg-white/10', 'transition-colors'],
+        ],
+      ],
       '#cache' => [
         'contexts' => ['user'],
       ],

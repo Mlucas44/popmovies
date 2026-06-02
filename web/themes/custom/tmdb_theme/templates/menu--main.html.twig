@@ -35,7 +35,7 @@
       </a>
     {% else %}
       {# Si non connecté : Bouton Se connecter #}
-      <a href="{{ path('user.login') }}" class="px-4 py-1 text-sm md:text-base font-semibold text-pop-nuit bg-pop-or rounded-full hover:bg-pop-blanc hover:shadow-[0_0_15px_rgba(255,193,7,0.6)] transition-all duration-300">
+      <a href="{{ path('user.login', {}, {'query': {'destination': '/profile'}}) }}" class="px-4 py-1 text-sm md:text-base font-semibold text-pop-nuit bg-pop-or rounded-full hover:bg-pop-blanc hover:shadow-[0_0_15px_rgba(255,193,7,0.6)] transition-all duration-300">
         Se connecter
       </a>
     {% endif %}
