@@ -2,3 +2,9 @@ services:
   tmdb_api.client:
     class: Drupal\tmdb_api\Service\TmdbClient
     arguments: ['@http_client', '@logger.factory', '@cache.default']
+
+  cache_context.tmdb_region:
+    class: Drupal\tmdb_api\Cache\Context\TmdbRegionCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }

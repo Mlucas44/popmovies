@@ -8,14 +8,22 @@
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Implements hook_preprocess_menu().
+ */
+function tmdb_theme_preprocess_menu(&$variables)
+{
+  if (isset($variables['menu_name']) && $variables['menu_name'] == 'main') {
+    $variables['region_selector'] = \Drupal::formBuilder()->getForm('\Drupal\tmdb_api\Form\RegionSelectorForm');
+  }
+}
+
+/**
  * Implements hook_form_alter().
  */
 function tmdb_theme_form_alter(&$form, FormStateInterface $form_state, $form_id)
 {
-  // Masquer les descriptions (textes d'aide) des formulaires utilisateur.
   if (in_array($form_id, ['user_login_form', 'user_register_form', 'user_pass'])) {
 
-    // Champs Username
     if (isset($form['account']['name'])) {
       unset($form['account']['name']['#description']);
     }
@@ -23,12 +31,10 @@ function tmdb_theme_form_alter(&$form, FormStateInterface $form_state, $form_id)
       unset($form['name']['#description']);
     }
 
-    // Champ Email
     if (isset($form['account']['mail'])) {
       unset($form['account']['mail']['#description']);
     }
 
-    // Vous pouvez aussi cibler le champ mot de passe si on le veut plus propre
     if (isset($form['account']['pass'])) {
       unset($form['account']['pass']['#description']);
     }

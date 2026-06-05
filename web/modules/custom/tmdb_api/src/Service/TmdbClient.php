@@ -157,6 +157,49 @@ class TmdbClient
   }
 
   /**
+   * Retrieves the list of available regions with a 7-day cache.
+   */
+  public function getAvailableRegions(): array
+  {
+    $cid = 'tmdb_api:available_regions';
+    if ($cache = $this->cacheBackend->get($cid)) {
+      return $cache->data;
+    }
+
+    $token = Settings::get('tmdb_api_token');
+    if (!$token) {
+      $this->logger->error('Le token TMDB est manquant dans settings.php.');
+      return [];
+    }
+
+    try {
+      $response = $this->httpClient->request('GET', 'https://api.themoviedb.org/3/watch/providers/regions', [
+        'headers' => [
+          'Authorization' => 'Bearer ' . $token,
+          'accept' => 'application/json',
+        ],
+        'query' => [
+          'language' => 'fr-FR',
+        ],
+      ]);
+
+      $data = json_decode($response->getBody()->getContents(), TRUE) ?? [];
+      $results = $data['results'] ?? [];
+
+      if (!empty($results)) {
+        $this->cacheBackend->set($cid, $results, time() + 604800);
+      }
+
+      return $results;
+    } catch (\Exception $e) {
+      $this->logger->error('Erreur API TMDB Regions : @msg', [
+        '@msg' => $e->getMessage()
+      ]);
+      return [];
+    }
+  }
+
+  /**
    * Récupère les films selon l'ID d'un genre.
    */
   public function getMoviesByGenre($genre_id, int $page = 1, string $language = 'fr-FR'): array
