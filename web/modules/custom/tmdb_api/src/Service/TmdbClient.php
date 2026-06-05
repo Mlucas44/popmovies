@@ -6,6 +6,7 @@ use GuzzleHttp\ClientInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Service pour interagir avec l'API TMDB.
@@ -34,17 +35,26 @@ class TmdbClient
   protected $logger;
 
   /**
+   * La pile de requêtes pour accéder à la session.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructeur.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    */
-  public function __construct(ClientInterface $http_client, LoggerChannelFactoryInterface $logger_factory, CacheBackendInterface $cache_backend)
+  public function __construct(ClientInterface $http_client, LoggerChannelFactoryInterface $logger_factory, CacheBackendInterface $cache_backend, RequestStack $request_stack = NULL)
   {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('tmdb_api');
     $this->cacheBackend = $cache_backend;
+    $this->requestStack = $request_stack ?: \Drupal::service('request_stack');
   }
 
   /**
@@ -245,6 +255,102 @@ class TmdbClient
       'include_adult' => 'false',
     ], 3600);
     return $data['results'] ?? [];
+  }
+
+  /**
+   * Dynamically retrieves the current region stored in the session.
+   * Defaults to 'FR'.
+   */
+  public function getCurrentRegion(): string
+  {
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request && $request->hasSession()) {
+      return $request->getSession()->get('tmdb_api_region', 'FR');
+    }
+    return 'FR';
+  }
+
+  /**
+   * Retrieves the streaming providers for the selected region.
+   * Returns the top 12 most popular providers.
+   */
+  public function getMovieProviders(): array
+  {
+    $region = $this->getCurrentRegion();
+    $cid = 'tmdb_api:providers:' . $region;
+
+    // Custom cache based on region. We do not use the generic requestApi() 
+    // method to be able to manually sort and slice the array before caching.
+    if ($cache = $this->cacheBackend->get($cid)) {
+      return $cache->data;
+    }
+
+    $token = Settings::get('tmdb_api_token');
+    if (!$token) {
+      $this->logger->error('Le token TMDB est manquant dans settings.php.');
+      return [];
+    }
+
+    try {
+      $response = $this->httpClient->request('GET', 'https://api.themoviedb.org/3/watch/providers/movie', [
+        'headers' => [
+          'Authorization' => 'Bearer ' . $token,
+          'accept' => 'application/json',
+        ],
+        'query' => [
+          'language' => 'fr-FR',
+          'watch_region' => $region,
+        ],
+      ]);
+
+      $data = json_decode($response->getBody()->getContents(), TRUE) ?? [];
+      $results = $data['results'] ?? [];
+
+      if (!empty($results)) {
+
+        $vip_providers = [
+          'Netflix' => 1,
+          'Amazon Prime Video' => 2,
+          'Canal+' => 3,
+          'Disney Plus' => 4,
+          'Disney+' => 4,
+          'Apple TV Plus' => 5,
+          'Max' => 6,
+          'Hulu' => 7,
+          'Paramount Plus' => 8,
+          'Paramount+' => 8,
+          'OCS' => 9,
+          'Crunchyroll' => 10,
+        ];
+
+        foreach ($results as &$provider) {
+          $name = $provider['provider_name'] ?? '';
+          if (isset($vip_providers[$name])) {
+            $provider['custom_priority'] = $vip_providers[$name];
+          } else {
+            $provider['custom_priority'] = 100 + ($provider['display_priority'] ?? 999);
+          }
+        }
+        unset($provider);
+
+        usort($results, function ($a, $b) {
+          $priority_a = $a['custom_priority'] ?? 999;
+          $priority_b = $b['custom_priority'] ?? 999;
+          return $priority_a <=> $priority_b;
+        });
+
+        $results = array_slice($results, 0, 12);
+
+        $this->cacheBackend->set($cid, $results, time() + 86400);
+      }
+
+      return $results;
+    } catch (\Exception $e) {
+      $this->logger->error('Erreur API TMDB Providers : @msg', [
+        '@msg' => $e->getMessage()
+      ]);
+      return [];
+    }
   }
 
   /**

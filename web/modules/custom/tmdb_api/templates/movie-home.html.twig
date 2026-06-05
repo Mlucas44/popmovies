@@ -1,39 +1,58 @@
 {{ attach_library('tmdb_theme/live_search') }}
 
 {# --- HERO SLIDER (Pleine largeur) --- #}
-{% include '@tmdb_api/movie-hero-slider.html.twig' with {
+{# {% include '@tmdb_api/movie-hero-slider.html.twig' with {
   'movies': popular_movies
-} %}
+} %} #}
 
-<div class="container mx-auto px-4 py-8 md:py-12">
-  {# --- BARRE DE RECHERCHE --- #}
-  {% include '@tmdb_api/movie-search-bar.html.twig' %}
+	<div
+	class="container mx-auto px-4 py-8 md:py-12"> {# --- BARRE DE RECHERCHE --- #}
+	{% include '@tmdb_api/movie-search-bar.html.twig' %}
 
-  {# --- CONTENU PAR DÉFAUT (CARROUSELS) --- #}
-  <div id="home-default-content" class="transition-opacity duration-500">
-    
-    {# Section : Films Populaires #}
-    {% include '@tmdb_api/movie-carousel.html.twig' with {
+	{# --- CONTENU PAR DÉFAUT (CARROUSELS) --- #}
+	<div
+		id="home-default-content" class="transition-opacity duration-500">
+
+		{# Section : Plateformes de streaming (Test de notre fonctionnalité Région) #}
+		{% if providers %}
+			<div class="mb-12">
+				<h2 class="text-2xl md:text-3xl font-bold text-pop-blanc mb-6">Plateformes de streaming :</h2>
+				<div class="flex flex-wrap gap-4 items-center">
+					{% for provider in providers %}
+						<div class="flex flex-col items-center gap-2 group w-20">
+							{% if provider.logo_path %}
+								<img src="https://image.tmdb.org/t/p/w154{{ provider.logo_path }}" 
+										 alt="{{ provider.provider_name }}" 
+										 title="{{ provider.provider_name }}"
+										 class="w-16 h-16 rounded-xl object-cover border border-pop-toile shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:border-pop-or" />
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+
+		{# Section : Films Populaires #}
+		{% include '@tmdb_api/movie-carousel.html.twig' with {
       'title': 'Films Populaires',
       'movies': popular_movies
     } %}
 
-    {# Section : À l'affiche #}
-    {% include '@tmdb_api/movie-carousel.html.twig' with {
+		{# Section : À l'affiche #}
+		{% include '@tmdb_api/movie-carousel.html.twig' with {
       'title': "Actuellement à l'affiche",
       'movies': now_playing_movies
     } %}
 
-  </div>
+	</div>
 
-  {# --- RÉSULTATS DE LA RECHERCHE (Masqué par défaut) --- #}
-  <div id="search-results-container" class="hidden">
-    <div id="search-results-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 min-h-[100px]">
-    </div>
+	{# --- RÉSULTATS DE LA RECHERCHE (Masqué par défaut) --- #}
+	<div id="search-results-container" class="hidden">
+		<div id="search-results-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 min-h-[100px]"></div>
 
-    {# --- LOADER DU SCROLL INFINI --- #}
-    <div id="search-scroll-trigger" class="hidden flex justify-center py-12">
-      <div class="w-8 h-8 border-4 border-pop-or border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  </div>
+		{# --- LOADER DU SCROLL INFINI --- #}
+		<div id="search-scroll-trigger" class="hidden flex justify-center py-12">
+			<div class="w-8 h-8 border-4 border-pop-or border-t-transparent rounded-full animate-spin"></div>
+		</div>
+	</div>
 </div>

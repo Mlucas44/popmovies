@@ -281,10 +281,16 @@ class MovieController extends ControllerBase
     $popular_movies = $this->tmdbClient->getPopularMovies(1);
     $now_playing_movies = $this->tmdbClient->getNowPlayingMovies(1);
 
+    $providers = $this->tmdbClient->getMovieProviders();
+
     return [
       '#theme' => 'movie_home',
       '#popular_movies' => $popular_movies,
       '#now_playing_movies' => $now_playing_movies,
+      '#providers' => $providers,
+      '#cache' => [
+        'contexts' => ['tmdb_region'],
+      ],
     ];
   }
 }

@@ -46,6 +46,7 @@ function tmdb_api_theme($existing, $type, $theme, $path)
       'variables' => [
         'popular_movies' => [],
         'now_playing_movies' => [],
+        'providers' => [],
       ],
     ],
     'movie_search_bar' => [
