@@ -1,39 +1,65 @@
 {# web/themes/custom/tmdb_theme/templates/menu--main.html.twig #}
 {% import _self as menus %}
 
-<div class="flex items-center justify-between w-full px-4 md:px-8">
+<div class="relative w-full bg-pop-nuit z-50 shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
+	<div class="flex items-center justify-between w-full px-4 md:px-8 py-3 relative z-10 pt-2">
 
-	<div class="flex-1 flex justify-start">
-		<a href="{{ path('<front>') }}" title="Accueil Pop Movies" class="flex-shrink-0 transition-transform duration-300 hover:scale-105">
-			<img src="/themes/custom/tmdb_theme/images/logo.svg" alt="Logo Pop Movies" class="h-16 md:h-24 w-auto"/>
-		</a>
+		<div class="flex-1 flex justify-start">
+			<a href="{{ path('<front>') }}" title="Accueil Pop Movies" class="flex-shrink-0 transition-transform duration-300 hover:scale-105 flex flex-col group mt-1">
+				<img src="/themes/custom/tmdb_theme/images/logo.svg" alt="Logo Pop Movies" class="h-16 md:h-20 w-auto drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]"/>
+			</a>
+		</div>
+
+		<div class="flex-none hidden md:flex relative group px-6 items-center">
+			<span class="font-marquee text-xl lg:text-2xl tracking-[0.15em] uppercase relative z-10 transition-all duration-300 group-hover:scale-105" style="
+																													color: #FF2A54;
+																													text-shadow:
+																														0 0 2px #FF2A54,
+																														0 0 8px #FF2A54,
+																														0 0 16px #D80027,
+																														0 0 30px #D80027,
+																														0 0 58px #8D021F,
+																														0 0 80px #8D021F;
+																													">
+				Good films make your life better
+			</span>
+			<div class="absolute w-[118%] h-[175%] top-[-38%] left-[-9%] bg-pop-rouge/20 blur-2xl rounded-full pointer-events-none group-hover:bg-pop-rouge/30 transition-all duration-300"></div>
+		</div>
+
+		<div class="flex-1 flex justify-end items-center gap-4 md:gap-6">
+
+			{% if region_selector %}
+				<div class="shadow-[0_0_10px_rgba(255,215,0,0.2)] bg-black/40 rounded">
+					{{ region_selector }}
+				</div>
+			{% endif %}
+
+			{% if logged_in %}
+				<a href="{{ path('tmdb_api.profile_dashboard') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#e4d9c5] overflow-hidden transition-transform duration-300 hover:scale-105 shadow-[0_0_12px_rgba(255,255,255,0.4)]" title="Mon Profil">
+					<img src="/themes/custom/tmdb_theme/images/default-avatar.png" alt="Profil utilisateur" class="w-full h-full object-cover bg-pop-nuit sepia opacity-90"/>
+				</a>
+			{% else %}
+				{# Design Ticket de cinéma classique (Admit One) #}
+				<a href="{{ path('user.login', {}, {'query': {'destination': '/profile'}}) }}" class="relative px-6 py-2 text-sm md:text-base font-typewriter font-bold tracking-widest text-[#1a1a1a] bg-[#e4d9c5] border-2 border-dashed border-[#1a1a1a] shadow-[0_5px_15px_rgba(0,0,0,0.5)] hover:bg-[#fff6e0] transition-colors duration-300 flex items-center gap-2">
+					<span class="uppercase">Admit One</span>
+					<span class="text-xs opacity-60">🎫</span>
+				</a>
+			{% endif %}
+
+		</div>
 	</div>
 
-	<div class="flex-none">
-		<nav aria-label="Menu principal">
-			{{ menus.menu_links(items, attributes, 0) }}
-		</nav>
-	</div>
-
-	<div class="flex-1 flex justify-end items-center gap-4 md:gap-6">
-
-		{% if region_selector %}
-			{{ region_selector }}
-		{% endif %}
-
-		{% if logged_in %}
-			<a href="{{ path('tmdb_api.profile_dashboard') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-pop-or overflow-hidden transition-transform duration-300 hover:scale-105 shadow-[0_0_8px_rgba(255,193,7,0.4)]" title="Mon Profil">
-				<img src="/themes/custom/tmdb_theme/images/default-avatar.png" alt="Profil utilisateur" class="w-full h-full object-cover bg-pop-nuit"/>
-			</a>
-		{% else %}
-			<a href="{{ path('user.login', {}, {'query': {'destination': '/profile'}}) }}" class="px-4 py-1 text-sm md:text-base font-semibold text-pop-nuit bg-pop-or rounded-full hover:bg-pop-blanc hover:shadow-[0_0_15px_rgba(255,193,7,0.6)] transition-all duration-300">
-				Se connecter
-			</a>
-		{% endif %}
-
+	{# -- LA RAMPE D'AMPOULES (The Marquee Caisson) -- #}
+	<div class="relative w-full h-8 shadow-[inset_0_5px_15px_rgba(0,0,0,0.7),0_10px_20px_rgba(0,0,0,0.9)] flex justify-evenly items-center px-2 md:px-8 z-20 overflow-hidden">
+		{% for i in 1..24 %}
+			<div class="relative z-10 w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-[#FFF8D6]
+												border border-amber-200/50
+												shadow-[0_0_12px_5px_#FF8C00,inset_0_0_6px_2px_#FFFFFF]
+												{% if loop.index % 5 == 0 %}animate-pulse{% endif %}
+												{% if loop.index % 8 == 0 %}opacity-50{% endif %}"></div>
+		{% endfor %}
 	</div>
 </div>
-
 {% macro menu_links(items, attributes, menu_level) %}
 	{% import _self as menus %}
 	{% if items %}
@@ -52,11 +78,11 @@
 
 							{% if menu_level == 0 %}
 								<a href="{{ item.url }}" class="relative flex items-center gap-1 py-2 transition-all duration-300 ease-out cursor-pointer
-																														                      {{ item.in_active_trail ? 'text-pop-blanc drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-pop-blanc/70 hover:text-pop-blanc' }}
-																														                      after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2
-																														                      after:h-[2px] after:bg-pop-or after:transition-all after:duration-300 after:shadow-[0_0_8px_#FFC107]
-																														                      {{ item.in_active_trail ? 'after:w-full' : 'after:w-0 group-hover:after:w-full' }}
-																														                      ">
+																																																																																																																																																																																																																																																						                      {{ item.in_active_trail ? 'text-pop-blanc drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-pop-blanc/70 hover:text-pop-blanc' }}
+																																																																																																																																																																																																																																																						                      after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2
+																																																																																																																																																																																																																																																						                      after:h-[2px] after:bg-pop-or after:transition-all after:duration-300 after:shadow-[0_0_8px_#FFC107]
+																																																																																																																																																																																																																																																						                      {{ item.in_active_trail ? 'after:w-full' : 'after:w-0 group-hover:after:w-full' }}
+																																																																																																																																																																																																																																																						                      ">
 									{{ item.title }}
 
 									{% if has_children %}
